@@ -1,19 +1,22 @@
 resource "aws_vpc" "main" {
-  cidr_block = var.cidr_block
+  cidr_block         = var.cidr_block
   enable_dns_support = true
-
   tags = merge({
     Name = "${var.env}-vpc"
-  }, var.tags)
+  },
+    var.tags)
 }
 
+module "subnets" {
+  source = "./subnets"
 
+  for_each    = var.subnets
+  cidr_block  = each.value["cidr_block"]
+  subnet_name = each.key
 
-resource "aws_subnet" "main" {
-  count = length(var.web_subnet_cider_block)
-  vpc_id     = aws_vpc.main.id
-  cidr_block = "10.0.1.0/24"
-  tags = merge({
-    Name = "${var.env}-web_subnet"
-  }, var.tags)
+  vpc_id = aws_vpc.main.id
+
+  env  = var.env
+  tags = var.tags
+  az   = var.az
 }
