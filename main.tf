@@ -13,5 +13,7 @@ module "subnets" {
   vpc_id = aws_vpc.main.id
   az = var.az
   env = var.env
+  tags = var.tags
+
 }
 
