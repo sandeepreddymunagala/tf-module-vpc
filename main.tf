@@ -7,14 +7,15 @@ resource "aws_vpc" "main" {
 module "subnets" {
   source = "./subnets"
 
-  for_each = var.subnets
-  cidr_block = each.value["cidr_block"]
+  for_each    = var.subnets
+  cidr_block  = each.value["cidr_block"]
   subnet_name = each.key
-  vpc_id = aws_vpc.main.id
-  az = var.az
-  env = var.env
-  tags = var.tags
 
+  vpc_id = aws_vpc.main.id
+
+  env  = var.env
+  tags = var.tags
+  az   = var.az
 }
 
 resource "aws_vpc_peering_connection" "peer" {
